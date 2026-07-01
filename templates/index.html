@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Mock Interview</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-icon">✦</div>
+        <h1>AI Mock Interview</h1>
+        <p class="subtitle">
+            Practice technical interviews with AI and receive instant feedback.
+        </p>
+        <form method="POST">
+            <div class="field">
+                <label for="role">Select role</label>
+                <p class="field-hint">Choose the role you want to practice for</p>
+                <select name="role" id="role">
+                    <optgroup label="💻 Software development">
+                        <option>Software Engineer</option>
+                        <option>Python Developer</option>
+                        <option>Java Developer</option>
+                        <option>C++ Developer</option>
+                        <option>Frontend Developer</option>
+                        <option>Backend Developer</option>
+                        <option>Full Stack Developer</option>
+                        <option>React Developer</option>
+                        <option>Node.js Developer</option>
+                        <option>Android Developer</option>
+                        <option>Flutter Developer</option>
+                    </optgroup>
+                    <optgroup label="🤖 Artificial intelligence">
+                        <option>AI Engineer</option>
+                        <option>Machine Learning Engineer</option>
+                        <option>Data Scientist</option>
+                        <option>Prompt Engineer</option>
+                        <option>Generative AI Engineer</option>
+                    </optgroup>
+                    <optgroup label="☁ Cloud & DevOps">
+                        <option>Cloud Engineer</option>
+                        <option>DevOps Engineer</option>
+                        <option>System Administrator</option>
+                    </optgroup>
+                    <optgroup label="🔒 Security">
+                        <option>Cyber Security Analyst</option>
+                        <option>Network Engineer</option>
+                    </optgroup>
+                    <optgroup label="📊 Business">
+                        <option>Business Analyst</option>
+                        <option>Product Manager</option>
+                        <option>Project Manager</option>
+                        <option>HR / General</option>
+                    </optgroup>
+                    <optgroup label="🏭 Core engineering">
+                        <option>Mechanical Engineer</option>
+                        <option>Electrical Engineer</option>
+                        <option>Electronics Engineer</option>
+                        <option>Civil Engineer</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="field">
+                <label for="difficulty">Difficulty</label>
+                <select name="difficulty" id="difficulty">
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="type">Interview type</label>
+                <select name="type" id="type">
+                    <option>Technical</option>
+                    <option>HR</option>
+                    <option>Mixed</option>
+                </select>
+            </div>
+            <button type="submit">Start interview <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="secure-note">🔒 Your data is secure and private</p>
+    </div>
+</div>
+
+<div class="site-signature">
+    <img src="{{ url_for('static', filename='images/signature.png') }}" alt="Balaji Tharsan signature">
+</div>
+
+</body>
+</html>
