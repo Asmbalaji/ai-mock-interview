@@ -1,0 +1,38 @@
+.dashboard{
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:25px;
+    max-width:1400px;
+    margin:auto;
+}
+
+.left-panel,
+.right-panel{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.status-card{
+    padding:20px;
+}
+
+.status-card h3{
+    margin-bottom:15px;
+}
+
+.status-card p{
+    margin:12px 0;
+    font-size:16px;
+    font-weight:600;
+}
+
+@media(max-width:1000px){
+
+.dashboard{
+
+grid-template-columns:1fr;
+
+}
+
+}

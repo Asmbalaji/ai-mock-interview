@@ -3,261 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interview</title>
+<title>Aureye-AI Interview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/interview.css') }}">
+
+<!-- Confidence Meter styles (kept inline so it works even before interview.css is updated) -->
 <style>
-  :root{
-    --bg-1:#dfe7f5;
-    --bg-2:#eef1f8;
-    --bg-3:#f6e9ef;
-    --glass-fill: rgba(255,255,255,0.55);
-    --glass-fill-strong: rgba(255,255,255,0.7);
-    --glass-border: rgba(255,255,255,0.8);
-    --ink-1:#1c1f26;
-    --ink-2:#5b6270;
-    --accent:#3a6df0;
-    --accent-2:#7b5cf0;
-    --shadow: 0 8px 32px rgba(31,38,69,0.12);
+  .confidence-panel .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
   }
 
-  *{ box-sizing:border-box; }
-
-  body{
-    margin:0;
-    min-height:100vh;
-    font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color:var(--ink-1);
-    background:
-      radial-gradient(circle at 15% 20%, rgba(123,92,240,0.25), transparent 45%),
-      radial-gradient(circle at 85% 15%, rgba(58,109,240,0.22), transparent 50%),
-      radial-gradient(circle at 50% 90%, rgba(255,180,210,0.25), transparent 55%),
-      linear-gradient(160deg, var(--bg-1), var(--bg-2) 50%, var(--bg-3));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:32px 16px;
-    overflow-x:hidden;
+  .confidence-panel .conf-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.75);
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
   }
 
-  /* Ambient floating orbs behind the glass */
-  .orb{
-    position:fixed;
-    border-radius:50%;
-    filter:blur(60px);
-    opacity:0.55;
-    z-index:0;
-    animation:drift 16s ease-in-out infinite;
-  }
-  .orb-a{ width:280px; height:280px; background:#8aa3ff; top:-60px; left:-80px; }
-  .orb-b{ width:320px; height:320px; background:#ffb4c6; bottom:-100px; right:-100px; animation-delay:-6s; }
-  .orb-c{ width:200px; height:200px; background:#a98cff; top:60%; left:75%; animation-delay:-3s; }
-
-  @keyframes drift{
-    0%,100%{ transform: translate(0,0) scale(1); }
-    50%{ transform: translate(20px,-25px) scale(1.08); }
+  .confidence-panel .conf-badge.level-low {
+    color: #ff8686;
+    border-color: rgba(255, 100, 100, 0.35);
+    background: rgba(255, 100, 100, 0.08);
   }
 
-  .card{
-    position:relative;
-    z-index:1;
-    width:100%;
-    max-width:640px;
-    background:var(--glass-fill);
-    border:1px solid var(--glass-border);
-    border-radius:28px;
-    padding:40px 36px;
-    backdrop-filter:blur(28px) saturate(160%);
-    -webkit-backdrop-filter:blur(28px) saturate(160%);
-    box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+  .confidence-panel .conf-badge.level-moderate {
+    color: #ffd27a;
+    border-color: rgba(255, 190, 100, 0.35);
+    background: rgba(255, 190, 100, 0.08);
   }
 
-  .eyebrow{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:18px;
+  .confidence-panel .conf-badge.level-high {
+    color: #7affb2;
+    border-color: rgba(100, 255, 170, 0.35);
+    background: rgba(100, 255, 170, 0.08);
   }
 
-  .eyebrow .label{
-    font-size:13px;
-    font-weight:600;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    color:var(--ink-2);
+  .confidence-meter {
+    width: 100%;
   }
 
-  h1{
-    font-size:15px;
-    font-weight:600;
-    letter-spacing:0.02em;
-    text-transform:uppercase;
-    color:var(--accent);
-    margin:0 0 6px 0;
+  .confidence-track {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
   }
 
-  .role-pill{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:var(--glass-fill-strong);
-    border:1px solid rgba(255,255,255,0.9);
-    border-radius:999px;
-    padding:8px 16px;
-    font-size:17px;
-    font-weight:600;
-    color:var(--ink-1);
-    margin-bottom:24px;
-    box-shadow: 0 2px 8px rgba(31,38,69,0.06);
-  }
-  .role-pill .dot{
-    width:8px; height:8px; border-radius:50%;
-    background:linear-gradient(135deg, var(--accent), var(--accent-2));
-    flex-shrink:0;
+  .confidence-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff8686 0%, #ffd27a 50%, var(--gold, #d4af37) 100%);
+    transition: width 0.6s ease;
   }
 
-  /* Progress bar */
-  .progress-wrap{
-    margin-bottom:28px;
-  }
-  .progress-text{
-    display:flex;
-    justify-content:space-between;
-    font-size:13px;
-    color:var(--ink-2);
-    margin-bottom:8px;
-    font-weight:500;
-  }
-  .progress-track{
-    height:8px;
-    border-radius:999px;
-    background:rgba(255,255,255,0.5);
-    border:1px solid rgba(255,255,255,0.7);
-    overflow:hidden;
-  }
-  .progress-fill{
-    height:100%;
-    border-radius:999px;
-    background:linear-gradient(90deg, var(--accent), var(--accent-2));
-    width:{{ (progress / total * 100) if total else 0 }}%;
-    transition:width 0.5s ease;
+  .confidence-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-family: 'Inter', sans-serif;
   }
 
-  .question-card{
-    background:rgba(255,255,255,0.5);
-    border:1px solid rgba(255,255,255,0.8);
-    border-radius:20px;
-    padding:24px 24px;
-    margin-bottom:24px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
-  }
-  .question-card h3{
-    margin:0;
-    font-size:20px;
-    line-height:1.5;
-    font-weight:600;
-    color:var(--ink-1);
+  .confidence-score {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: var(--gold, #d4af37);
   }
 
-  textarea{
-    width:100%;
-    min-height:160px;
-    resize:vertical;
-    font-family:inherit;
-    font-size:15px;
-    line-height:1.6;
-    color:var(--ink-1);
-    padding:16px 18px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,0.9);
-    background:rgba(255,255,255,0.55);
-    backdrop-filter:blur(10px);
-    box-shadow: inset 0 1px 3px rgba(31,38,69,0.06);
-    outline:none;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-  }
-  textarea::placeholder{ color:#8b91a0; }
-  textarea:focus{
-    border-color:var(--accent);
-    background:rgba(255,255,255,0.75);
-    box-shadow: 0 0 0 4px rgba(58,109,240,0.15), inset 0 1px 3px rgba(31,38,69,0.06);
+  .confidence-score small {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: 'Inter', sans-serif;
   }
 
-  .actions{
-    display:flex;
-    justify-content:flex-end;
-    margin-top:22px;
+  .confidence-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  button[type="submit"]{
-    appearance:none;
-    border:none;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:15px;
-    font-weight:600;
-    color:#fff;
-    padding:14px 28px;
-    border-radius:999px;
-    background:linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 6px 20px rgba(58,109,240,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-  }
-  button[type="submit"]:hover{
-    transform:translateY(-1px);
-    box-shadow: 0 10px 28px rgba(58,109,240,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
-    filter:brightness(1.04);
-  }
-  button[type="submit"]:active{
-    transform:translateY(0);
-    box-shadow: 0 4px 14px rgba(58,109,240,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
-  }
-  button[type="submit"]:focus-visible{
-    outline:3px solid rgba(58,109,240,0.5);
-    outline-offset:2px;
+  .confidence-signals {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
-  @media (max-width:480px){
-    .card{ padding:28px 20px; border-radius:22px; }
-    .question-card h3{ font-size:18px; }
-    button[type="submit"]{ width:100%; justify-content:center; }
-   
+  .confidence-signals li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.55);
   }
-  
-  #micBtn{
-    appearance:none;
-    border:none;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:15px;
-    font-weight:600;
-    color:#fff;
-    padding:14px 28px;
-    border-radius:999px;
-    background:linear-gradient(135deg,#ff3b30,#ff6b6b);
-    box-shadow:0 6px 20px rgba(255,59,48,.35);
-    transition:transform .2s ease, box-shadow .2s ease;
-    margin-right:12px;
-}
 
-#micBtn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 24px rgba(255,59,48,.45);
-}
+  .confidence-signals .sig-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+  }
 
-#micBtn:active{
-    transform:scale(.98);
-}
-
-.actions{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:22px;
-}
-  
-  
+  .confidence-signals .sig-dot.active {
+    background: var(--gold, #d4af37);
+    box-shadow: 0 0 6px var(--gold, #d4af37);
+  }
 </style>
 </head>
 <body>
@@ -266,51 +140,311 @@
   <div class="orb orb-b"></div>
   <div class="orb orb-c"></div>
 
-  <div class="card">
-    <h1>AI Mock Interview</h1>
+  {% set pct = ((progress / total * 100) | round | int) if total else 0 %}
 
-    <div class="role-pill">
-      <span class="dot"></span>
-      {{ role }}
-    </div>
+  <div class="shell">
 
-    <div class="progress-wrap">
-      <div class="progress-text">
-        <span>Question {{ progress }} of {{ total }}</span>
-        <span>{{ ((progress / total * 100) | round | int) if total else 0 }}%</span>
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='images/ai-logo.jpeg.avif') }}" class="brand-mark" alt="Aureye-AI">
+        <div class="brand-copy">
+          <h1>Aureye<span>-AI</span></h1>
+          <p>AI Virtual Interview</p>
+        </div>
       </div>
-      <div class="progress-track">
-        <div class="progress-fill"></div>
+
+      <div class="brand-mid">
+        <span class="dot"></span>
+        <span id="aiStatus">Ready to Interview</span>
+        <span class="role-pill">{{ role }}</span>
       </div>
-    </div>
 
-    <div class="question-card">
-      <h3>{{ question }}</h3>
-    </div>
-     <form method="POST">
+      <div class="topbar-actions">
+        <button type="button" class="icon-btn" title="Help">?</button>
+        <div class="candidate">
+          <div class="candidate-avatar">{{ candidate_initial | default('C') }}</div>
+          <div class="candidate-copy">
+            <strong>{{ candidate_name | default('Candidate') }}</strong>
+            <span>Candidate</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
-    <textarea
-        id="answer"
-        name="answer"
-        placeholder="Type your answer here..."
-        required></textarea>
+    <!-- ===== MAIN GRID ===== -->
+    <div class="grid">
 
-    <div class="actions">
+      <!-- ---------- LEFT COLUMN ---------- -->
+      <div class="col-main">
 
-        <button type="button" id="micBtn">
-            🎤 Speak
-        </button>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Your Video</h2>
+            <span class="live-pill"><span class="live-dot"></span>Live</span>
+          </div>
 
-        <button type="submit">
-            Next Question →
-        </button>
+          <div class="camera-card">
+            <video id="camera" autoplay playsinline muted></video>
+            <div class="camera-status" id="cameraStatus">Initializing Camera…</div>
+            <div class="face-status" id="faceStatus">Waiting for Face…</div>
+          </div>
+        </section>
 
-    </div>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Current Question</h2>
+            <span class="q-pill">Question {{ progress }} of {{ total }}</span>
+          </div>
 
-</form>
+          <p class="question-text" id="questionText">{{ question }}</p>
+          <p class="question-hint">Take your time and give a clear, specific answer.</p>
+
+          <form method="POST" id="answerForm">
+            <label class="field-label" for="answer">Your Answer</label>
+            <textarea
+              id="answer"
+              name="answer"
+              maxlength="2000"
+              placeholder="Type your answer here…"
+              required></textarea>
+            <div class="char-count"><span id="charCount">0</span> / 2000</div>
+
+            <div class="actions">
+              <button type="button" id="micBtn" class="btn btn-ghost">
+                <span class="mic-dot"></span> Speak
+                <small>Click to speak your answer</small>
+              </button>
+
+              <div class="actions-right">
+                <button type="button" id="speakQuestion" class="btn btn-outline">Listen Question</button>
+                <button type="submit" class="btn btn-primary">Next Question →</button>
+              </div>
+            </div>
+          </form>
+        </section>
 
       </div>
-<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+
+      <!-- ---------- RIGHT SIDEBAR ---------- -->
+      <aside class="col-side">
+
+        <!-- ===== CONFIDENCE METER (NEW) ===== -->
+        <section class="panel confidence-panel">
+          <div class="panel-head">
+            <h3>Confidence Meter</h3>
+            <span class="conf-badge level-low" id="confBadge">Low</span>
+          </div>
+
+          <div class="confidence-meter">
+            <div class="confidence-track">
+              <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+            <div class="confidence-meta">
+              <div class="confidence-score">
+                <span id="confidenceScore">0</span><small>/100</small>
+              </div>
+              <span class="confidence-label" id="confidenceLabel">Warming up…</span>
+            </div>
+          </div>
+
+          <ul class="confidence-signals">
+            <li><span class="sig-dot" id="sigFace"></span>Face detected steadily</li>
+            <li><span class="sig-dot" id="sigSpeech"></span>Speaking / typing actively</li>
+            <li><span class="sig-dot" id="sigPace"></span>Steady response pace</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h3>Interview Progress</h3>
+          <div class="progress-row">
+            <div class="ring" style="background: conic-gradient(var(--gold) {{ pct }}%, rgba(255,255,255,0.08) {{ pct }}%);">
+              <div class="ring-inner">
+                <strong>{{ pct }}%</strong>
+                <span>Completed</span>
+              </div>
+            </div>
+            <div class="progress-copy">
+              <strong>{{ progress }} of {{ total }}</strong>
+              <span>Questions</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h3>Question Navigator</h3>
+          <div class="nav-grid">
+            {% for i in range(1, total + 1) %}
+              {% if i < progress %}
+                <span class="nav-node answered" title="Answered">✓</span>
+              {% elif i == progress %}
+                <span class="nav-node current" title="Current">{{ i }}</span>
+              {% else %}
+                <span class="nav-node pending" title="Pending">{{ i }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="nav-legend">
+            <span><i class="dot dot-answered"></i>Answered</span>
+            <span><i class="dot dot-current"></i>Current</span>
+            <span><i class="dot dot-pending"></i>Pending</span>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h3>Interview Tips</h3>
+          <ul class="tips">
+            <li>Speak clearly and confidently</li>
+            <li>Provide specific examples</li>
+            <li>Take your time to think</li>
+            <li>Be honest and authentic</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h3>Session Info</h3>
+          <ul class="session-info">
+            <li><span>Time Elapsed</span><strong id="timeElapsed">00:00</strong></li>
+            <li><span>Total Questions</span><strong>{{ total }}</strong></li>
+            <li><span>Interview Type</span><strong>{{ role }}</strong></li>
+          </ul>
+        </section>
+
+      </aside>
+    </div>
+
+    <footer class="page-footer">© 2026 Aureye-AI. All rights reserved.</footer>
+  </div>
+
+  <!-- MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
+
+  <!-- App JS -->
+  <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/facedetection.js') }}"></script>
+
+  <script>
+    // character counter
+    const answerEl = document.getElementById('answer');
+    const charCountEl = document.getElementById('charCount');
+    if (answerEl && charCountEl) {
+      answerEl.addEventListener('input', () => {
+        charCountEl.textContent = answerEl.value.length;
+      });
+    }
+
+    // simple session timer (purely cosmetic; wire to real session start if available)
+    const timeEl = document.getElementById('timeElapsed');
+    if (timeEl) {
+      let seconds = 0;
+      setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
+        timeEl.textContent = `${m}:${s}`;
+      }, 1000);
+    }
+  </script>
+
+  <!-- ===== CONFIDENCE METER LOGIC (NEW) ===== -->
+  <script>
+    (function () {
+      const fillEl = document.getElementById('confidenceFill');
+      const scoreEl = document.getElementById('confidenceScore');
+      const labelEl = document.getElementById('confidenceLabel');
+      const badgeEl = document.getElementById('confBadge');
+      const sigFace = document.getElementById('sigFace');
+      const sigSpeech = document.getElementById('sigSpeech');
+      const sigPace = document.getElementById('sigPace');
+      const faceStatusEl = document.getElementById('faceStatus');
+      const answerBox = document.getElementById('answer');
+      const micBtnEl = document.getElementById('micBtn');
+
+      if (!fillEl) return; // panel not present, bail safely
+
+      // Rolling state used to derive the score. Real numbers can be swapped
+      // in later (e.g. from facedetection.js confidence values or a
+      // server-side voice/text sentiment model) without touching the UI code.
+      let faceSteadyTicks = 0;   // consecutive ticks with a face detected
+      let typingActivity = 0;    // recent keystroke activity, decays over time
+      let lastKeyTime = 0;
+      let pauseCount = 0;        // long pauses between keystrokes (hurts pace score)
+      let micActive = false;
+
+      if (micBtnEl) {
+        micBtnEl.addEventListener('click', () => {
+          micActive = true;
+          setTimeout(() => { micActive = false; }, 4000);
+        });
+      }
+
+      if (answerBox) {
+        answerBox.addEventListener('input', () => {
+          const now = Date.now();
+          if (lastKeyTime && now - lastKeyTime > 4000) {
+            pauseCount = Math.min(pauseCount + 1, 5);
+          }
+          lastKeyTime = now;
+          typingActivity = Math.min(typingActivity + 8, 100);
+        });
+      }
+
+      function faceIsDetected() {
+        if (!faceStatusEl) return false;
+        const t = faceStatusEl.textContent.toLowerCase();
+        return t.includes('detected') && !t.includes('waiting') && !t.includes('no face');
+      }
+
+      function computeScore() {
+        // --- Face presence signal (0-40) ---
+        if (faceIsDetected()) {
+          faceSteadyTicks = Math.min(faceSteadyTicks + 1, 10);
+        } else {
+          faceSteadyTicks = Math.max(faceSteadyTicks - 2, 0);
+        }
+        const faceScore = (faceSteadyTicks / 10) * 40;
+
+        // --- Speech / typing activity signal (0-35) ---
+        typingActivity = Math.max(typingActivity - 3, 0); // decay each tick
+        const activityScore = Math.min((typingActivity / 100) * 35 + (micActive ? 10 : 0), 35);
+
+        // --- Pace signal (0-25): fewer long pauses = steadier pace ---
+        pauseCount = Math.max(pauseCount - 0.05, 0);
+        const paceScore = Math.max(25 - pauseCount * 5, 0);
+
+        const total = Math.round(faceScore + activityScore + paceScore);
+        return Math.max(0, Math.min(100, total));
+      }
+
+      function levelFor(score) {
+        if (score < 40) return { key: 'low', label: 'Low confidence' };
+        if (score < 70) return { key: 'moderate', label: 'Moderate confidence' };
+        return { key: 'high', label: 'High confidence' };
+      }
+
+      function render() {
+        const score = computeScore();
+        const { key, label } = levelFor(score);
+
+        fillEl.style.width = score + '%';
+        scoreEl.textContent = score;
+        labelEl.textContent = label;
+
+        badgeEl.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+        badgeEl.classList.remove('level-low', 'level-moderate', 'level-high');
+        badgeEl.classList.add('level-' + key);
+
+        sigFace.classList.toggle('active', faceIsDetected());
+        sigSpeech.classList.toggle('active', typingActivity > 15 || micActive);
+        sigPace.classList.toggle('active', pauseCount < 1);
+      }
+
+      setInterval(render, 1000);
+      render();
+    })();
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Login · Aureye-AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FAF8F4;
+    --surface:#FFFFFF;
+    --ink:#1C1B19;
+    --ink-soft:#6B6560;
+    --gold:#B8934A;
+    --gold-light:#D9C08B;
+    --border:#E9E3D8;
+    --ring:rgba(184,147,74,0.18);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html,body{height:100%;}
+
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--ivory);
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Interview-booth spotlight, the page's signature element */
+  body::before{
+    content:"";
+    position:absolute;
+    top:-20%;
+    left:50%;
+    transform:translateX(-50%);
+    width:900px;
+    height:900px;
+    background:radial-gradient(circle, var(--ring) 0%, rgba(184,147,74,0) 65%);
+    pointer-events:none;
+  }
+
+  .booth-mark{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin-bottom:28px;
+    animation:riseIn .6s ease both;
+  }
+
+  .booth-ring{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:1.5px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+
+  .booth-ring::after{
+    content:"";
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--gold);
+  }
+
+  .booth-label{
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:500;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:44px 40px 36px;
+    width:100%;
+    max-width:380px;
+    box-shadow:0 24px 60px -28px rgba(28,27,25,0.18);
+    position:relative;
+    z-index:1;
+    animation:riseIn .7s ease both;
+    animation-delay:.05s;
+  }
+
+  h2{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    font-size:32px;
+    text-align:center;
+    letter-spacing:0.01em;
+    margin-bottom:6px;
+  }
+
+  .subtitle{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:32px;
+  }
+
+  form{display:flex;flex-direction:column;gap:20px;}
+
+  .field{display:flex;flex-direction:column;gap:6px;}
+
+  label{
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  input{
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    background:var(--ivory);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:13px 14px;
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+
+  input::placeholder{color:#B4AEA4;}
+
+  input:hover{border-color:#D8D0C0;}
+
+  input:focus{
+    border-color:var(--gold);
+    background:var(--surface);
+    box-shadow:0 0 0 4px var(--ring);
+  }
+
+  button{
+    margin-top:8px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0.03em;
+    color:var(--ivory);
+    background:linear-gradient(135deg, #C9A45C, var(--gold));
+    border:none;
+    border-radius:9px;
+    padding:14px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    box-shadow:0 10px 24px -10px rgba(184,147,74,0.55);
+  }
+
+  button:hover{filter:brightness(1.05);transform:translateY(-1px);}
+  button:active{transform:translateY(0);}
+
+  button:focus-visible,
+  input:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:2px;
+  }
+
+  .footnote{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:24px;
+  }
+
+  .footnote a{
+    color:var(--gold);
+    text-decoration:none;
+    font-weight:600;
+  }
+
+  .footnote a:hover{text-decoration:underline;}
+
+  @keyframes riseIn{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .booth-mark, .card{animation:none;}
+  }
+
+  @media (max-width:420px){
+    .card{padding:36px 26px 30px;}
+    h2{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="booth-mark">
+  <div class="booth-ring"></div>
+  <span class="booth-label">Aureye-AI Interview Booth</span>
+</div>
+
+<div class="card">
+  <h2>Student Login</h2>
+  <p class="subtitle">Sign in to enter your interview session</p>
+
+  <form method="POST">
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@skcet.ac.in" required>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required>
+    </div>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p class="footnote">Forgot password? <a href="#">Reset it here</a></p>
+</div>
+
+</body>
+</html>

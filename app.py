@@ -2,13 +2,14 @@ import os
 import re
 import json
 from datetime import datetime
-
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
     Flask, render_template, request, redirect,
     url_for, session, send_file
 )
 from groq import Groq
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib import colors
@@ -20,10 +21,73 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 load_dotenv()
 
 app = Flask(__name__)
+
 app.secret_key = os.getenv("SECRET_KEY", "dev-secret-change-me")
 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = "llama-3.3-70b-versatile"
+class Student(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return f"<Student {self.email}>"
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        email = request.form["email"]
+        password = generate_password_hash(request.form["password"])
+
+        student = Student(
+            name=name,
+            email=email,
+            password=password
+        )
+
+        db.session.add(student)
+        db.session.commit()
+
+        return "Registration Successful!"
+
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        email = request.form["email"]
+        password = request.form["password"]
+
+        student = Student.query.filter_by(email=email).first()
+
+        if student and check_password_hash(student.password, password):
+            session["student"] = student.name
+            return redirect(url_for("home"))
+
+        return "Invalid Email or Password"
+
+    return render_template("login.html")
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "student" not in session:
+        return redirect(url_for("login"))
+
+    return render_template(
+        "dashboard.html",
+        student=session["student"]
+    )
 
 # Used as a fallback question source if the LLM call in generate_questions() fails
 QUESTION_BANK = {
@@ -157,6 +221,8 @@ Example:
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    if "student" not in session:
+            return redirect(url_for("login"))
     if request.method == "POST":
         role = request.form["role"]
         difficulty = request.form["difficulty"]
@@ -194,15 +260,24 @@ def report():
 @app.route("/interview", methods=["GET", "POST"])
 def interview():
 
+    # User must be logged in
+    if "student" not in session:
+        return redirect(url_for("login"))
+
+    # Interview must be started
     if "questions" not in session:
         return redirect(url_for("home"))
 
-    idx = session["current_index"]
-    questions = session["questions"]
+    idx = session.get("current_index", 0)
+    questions = session.get("questions", [])
+
+    # Prevent IndexError
+    if idx >= len(questions):
+        return redirect(url_for("report"))
 
     if request.method == "POST":
-        answer = request.form.get("answer", "").strip()
 
+        answer = request.form.get("answer", "").strip()
         question = questions[idx]
 
         evaluation = evaluate_answer(
@@ -211,7 +286,7 @@ def interview():
             answer
         )
 
-        results = session["results"]
+        results = session.get("results", [])
 
         results.append({
             "question": question,
@@ -222,6 +297,7 @@ def interview():
         session["results"] = results
         session["current_index"] = idx + 1
 
+        # If interview completed
         if session["current_index"] >= len(questions):
             return redirect(url_for("report"))
 
@@ -234,7 +310,6 @@ def interview():
         total=len(questions),
         role=session["role"]
     )
-
 
 @app.route("/report/pdf")
 def report_pdf():
@@ -282,11 +357,22 @@ def report_pdf():
     return send_file(path, as_attachment=True, download_name="interview_report.pdf")
 
 
+
 @app.route("/restart")
 def restart():
-    session.clear()
+
+    session.pop("questions", None)
+    session.pop("results", None)
+    session.pop("current_index", None)
+    session.pop("role", None)
+    session.pop("difficulty", None)
+    session.pop("type", None)
+
     return redirect(url_for("home"))
 
-
 if __name__ == "__main__":
+
+    with app.app_context():
+        db.create_all()
+
     app.run(debug=True)

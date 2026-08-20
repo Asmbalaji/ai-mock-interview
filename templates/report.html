@@ -3,23 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Report</title>
+<title>Aureye-AI Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-1:#dfe7f5;
-    --bg-2:#eef1f8;
-    --bg-3:#f6e9ef;
-    --glass-fill: rgba(255,255,255,0.55);
-    --glass-fill-strong: rgba(255,255,255,0.7);
-    --glass-border: rgba(255,255,255,0.8);
-    --ink-1:#1c1f26;
-    --ink-2:#5b6270;
-    --accent:#3a6df0;
-    --accent-2:#7b5cf0;
-    --good:#1f9d6b;
-    --warn:#e0892e;
-    --bad:#d9495f;
-    --shadow: 0 8px 32px rgba(31,38,69,0.12);
+    --bg-1:#0b0d13;
+    --bg-2:#12141d;
+    --bg-3:#171320;
+    --gold:#d4af37;
+    --gold-soft:rgba(212,175,55,0.16);
+    --glass-fill: rgba(255,255,255,0.045);
+    --glass-fill-strong: rgba(255,255,255,0.07);
+    --glass-border: rgba(255,255,255,0.09);
+    --ink-1:#f3f2ee;
+    --ink-2:rgba(243,242,238,0.62);
+    --ink-3:rgba(243,242,238,0.4);
+    --good:#7affb2;
+    --warn:#ffd27a;
+    --bad:#ff8686;
+    --shadow: 0 20px 60px rgba(0,0,0,0.45);
   }
 
   *{ box-sizing:border-box; }
@@ -27,13 +30,13 @@
   body{
     margin:0;
     min-height:100vh;
-    font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color:var(--ink-1);
     background:
-      radial-gradient(circle at 15% 20%, rgba(123,92,240,0.25), transparent 45%),
-      radial-gradient(circle at 85% 15%, rgba(58,109,240,0.22), transparent 50%),
-      radial-gradient(circle at 50% 90%, rgba(255,180,210,0.25), transparent 55%),
-      linear-gradient(160deg, var(--bg-1), var(--bg-2) 50%, var(--bg-3));
+      radial-gradient(circle at 12% 15%, rgba(212,175,55,0.14), transparent 45%),
+      radial-gradient(circle at 88% 12%, rgba(123,92,240,0.18), transparent 50%),
+      radial-gradient(circle at 50% 95%, rgba(255,140,180,0.10), transparent 55%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
     display:flex;
     justify-content:center;
     padding:48px 16px 80px;
@@ -43,14 +46,14 @@
   .orb{
     position:fixed;
     border-radius:50%;
-    filter:blur(60px);
-    opacity:0.5;
+    filter:blur(70px);
+    opacity:0.35;
     z-index:0;
-    animation:drift 16s ease-in-out infinite;
+    animation:drift 18s ease-in-out infinite;
   }
-  .orb-a{ width:280px; height:280px; background:#8aa3ff; top:-60px; left:-80px; }
-  .orb-b{ width:320px; height:320px; background:#ffb4c6; bottom:-100px; right:-100px; animation-delay:-6s; }
-  .orb-c{ width:200px; height:200px; background:#a98cff; top:60%; left:75%; animation-delay:-3s; }
+  .orb-a{ width:300px; height:300px; background:#d4af37; top:-80px; left:-90px; }
+  .orb-b{ width:340px; height:340px; background:#7b5cf0; bottom:-110px; right:-110px; animation-delay:-6s; }
+  .orb-c{ width:220px; height:220px; background:#ff8ec0; top:55%; left:78%; animation-delay:-3s; }
 
   @keyframes drift{
     0%,100%{ transform: translate(0,0) scale(1); }
@@ -61,10 +64,41 @@
     position:relative;
     z-index:1;
     width:100%;
-    max-width:720px;
+    max-width:760px;
   }
 
-  /* Header summary card */
+  /* ===== Brand header ===== */
+  .brand-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:28px;
+    padding:0 4px;
+  }
+  .brand-mark{
+    width:44px; height:44px;
+    border-radius:12px;
+    object-fit:cover;
+    box-shadow:0 4px 16px rgba(212,175,55,0.25);
+  }
+  .brand-copy h1{
+    margin:0;
+    font-family:'Cormorant Garamond', serif;
+    font-weight:700;
+    font-size:26px;
+    letter-spacing:0.01em;
+    color:var(--ink-1);
+  }
+  .brand-copy h1 span{ color:var(--gold); }
+  .brand-copy p{
+    margin:2px 0 0;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--ink-3);
+  }
+
+  /* ===== Summary card ===== */
   .summary-card{
     background:var(--glass-fill);
     border:1px solid var(--glass-border);
@@ -72,16 +106,16 @@
     padding:36px 36px 32px;
     backdrop-filter:blur(28px) saturate(160%);
     -webkit-backdrop-filter:blur(28px) saturate(160%);
-    box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+    box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.06);
     margin-bottom:28px;
   }
 
-  h1{
-    font-size:15px;
+  .eyebrow{
+    font-size:13px;
     font-weight:600;
-    letter-spacing:0.02em;
+    letter-spacing:0.08em;
     text-transform:uppercase;
-    color:var(--accent);
+    color:var(--gold);
     margin:0 0 14px 0;
   }
 
@@ -90,44 +124,56 @@
     align-items:center;
     gap:8px;
     background:var(--glass-fill-strong);
-    border:1px solid rgba(255,255,255,0.9);
+    border:1px solid var(--glass-border);
     border-radius:999px;
     padding:8px 16px;
-    font-size:16px;
+    font-size:15px;
     font-weight:600;
     color:var(--ink-1);
-    margin-bottom:22px;
-    box-shadow: 0 2px 8px rgba(31,38,69,0.06);
+    margin-bottom:24px;
   }
   .role-pill .dot{
     width:8px; height:8px; border-radius:50%;
-    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    background:var(--gold);
     flex-shrink:0;
+    box-shadow:0 0 8px var(--gold);
   }
 
-  .score-row{
+  /* ===== Dual gauge row: Score + Confidence ===== */
+  .gauge-row{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+  }
+
+  .gauge-block{
     display:flex;
     align-items:center;
-    gap:24px;
+    gap:20px;
+    flex:1;
+    min-width:230px;
+    padding:16px 18px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
   }
 
   .score-ring{
     position:relative;
-    width:92px;
-    height:92px;
+    width:84px;
+    height:84px;
     flex-shrink:0;
   }
   .score-ring svg{ width:100%; height:100%; transform:rotate(-90deg); }
   .score-ring .track{
     fill:none;
-    stroke:rgba(255,255,255,0.6);
+    stroke:rgba(255,255,255,0.08);
     stroke-width:9;
   }
   .score-ring .fill{
     fill:none;
     stroke-width:9;
     stroke-linecap:round;
-    stroke:url(#scoreGradient);
     transition: stroke-dashoffset 0.6s ease;
   }
   .score-ring .num{
@@ -136,29 +182,40 @@
     display:flex;
     align-items:center;
     justify-content:center;
+    font-family:'Cormorant Garamond', serif;
     font-size:22px;
     font-weight:700;
     color:var(--ink-1);
   }
 
-  .score-meta .label{
-    font-size:13px;
-    font-weight:600;
-    letter-spacing:0.03em;
+  .gauge-meta .label{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.05em;
     text-transform:uppercase;
-    color:var(--ink-2);
+    color:var(--ink-3);
     margin-bottom:4px;
   }
-  .score-meta .value{
-    font-size:15px;
-    color:var(--ink-1);
+  .gauge-meta .value{
+    font-size:14px;
+    color:var(--ink-2);
+    line-height:1.4;
   }
+  .gauge-meta .value strong{ color:var(--ink-1); }
 
   /* Category breakdown */
   .category-breakdown{
     margin-top:26px;
     padding-top:24px;
-    border-top:1px solid rgba(255,255,255,0.6);
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .breakdown-title{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-3);
+    margin:0 0 14px;
   }
   .category-row{
     display:flex;
@@ -176,16 +233,15 @@
   }
   .category-bar-track{
     flex:1;
-    height:10px;
+    height:9px;
     border-radius:999px;
-    background:rgba(255,255,255,0.5);
+    background:rgba(255,255,255,0.06);
     overflow:hidden;
-    box-shadow: inset 0 1px 2px rgba(31,38,69,0.08);
   }
   .category-bar-fill{
     height:100%;
     border-radius:999px;
-    background:linear-gradient(90deg, var(--accent), var(--accent-2));
+    background:linear-gradient(90deg, var(--gold), #f0d074);
     transition: width 0.6s ease;
   }
   .category-value{
@@ -197,21 +253,39 @@
     color:var(--ink-1);
   }
 
-  /* Performance badge */
+  /* Performance + confidence badges */
+  .badge-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:22px;
+  }
   .performance-badge{
     display:inline-flex;
     align-items:center;
     gap:8px;
-    margin-top:22px;
     padding:10px 20px;
     border-radius:999px;
-    font-size:14px;
+    font-size:13.5px;
     font-weight:700;
   }
-  .perf-excellent{ background:rgba(31,157,107,0.15); color:var(--good); }
-  .perf-good{ background:rgba(58,109,240,0.15); color:var(--accent); }
-  .perf-fair{ background:rgba(224,137,46,0.15); color:var(--warn); }
-  .perf-poor{ background:rgba(217,73,95,0.15); color:var(--bad); }
+  .perf-excellent{ background:rgba(122,255,178,0.12); color:var(--good); }
+  .perf-good{ background:rgba(212,175,55,0.14); color:var(--gold); }
+  .perf-fair{ background:rgba(255,210,122,0.12); color:var(--warn); }
+  .perf-poor{ background:rgba(255,134,134,0.12); color:var(--bad); }
+
+  .confidence-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 20px;
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:700;
+  }
+  .conf-low{ background:rgba(255,134,134,0.12); color:var(--bad); }
+  .conf-moderate{ background:rgba(255,210,122,0.12); color:var(--warn); }
+  .conf-high{ background:rgba(122,255,178,0.12); color:var(--good); }
 
   .header-actions{
     display:flex;
@@ -236,27 +310,29 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   }
   .btn-primary{
-    color:#fff;
-    background:linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 6px 20px rgba(58,109,240,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+    color:#141414;
+    background:linear-gradient(135deg, var(--gold), #f0d074);
+    box-shadow: 0 8px 22px rgba(212,175,55,0.28);
   }
-  .btn-primary:hover{ transform:translateY(-1px); filter:brightness(1.04); }
+  .btn-primary:hover{ transform:translateY(-1px); filter:brightness(1.05); }
 
   .btn-ghost{
     color:var(--ink-1);
     background:var(--glass-fill-strong);
-    border:1px solid rgba(255,255,255,0.9);
+    border:1px solid var(--glass-border);
   }
-  .btn-ghost:hover{ transform:translateY(-1px); background:rgba(255,255,255,0.85); }
+  .btn-ghost:hover{ transform:translateY(-1px); background:rgba(255,255,255,0.1); }
 
-  /* Question cards */
+  /* ===== Question cards ===== */
   .q-card{
-    background:rgba(255,255,255,0.5);
-    border:1px solid rgba(255,255,255,0.8);
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
     border-radius:22px;
     padding:26px 28px;
     margin-bottom:20px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 4px 16px rgba(31,38,69,0.06);
+    backdrop-filter:blur(20px) saturate(150%);
+    -webkit-backdrop-filter:blur(20px) saturate(150%);
+    box-shadow: var(--shadow);
   }
 
   .q-head{
@@ -270,49 +346,100 @@
   .q-number{
     font-size:12px;
     font-weight:700;
-    letter-spacing:0.04em;
+    letter-spacing:0.05em;
     text-transform:uppercase;
-    color:var(--accent);
+    color:var(--gold);
     margin-bottom:4px;
   }
 
   .q-text{
-    font-size:17px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:19px;
     font-weight:600;
     line-height:1.5;
     color:var(--ink-1);
     margin:0;
   }
 
-  .q-score{
+  .q-badges{
     flex-shrink:0;
-    font-size:13px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+  }
+
+  .q-score{
+    font-size:12.5px;
     font-weight:700;
     padding:6px 12px;
     border-radius:999px;
     white-space:nowrap;
   }
-  .score-good{ background:rgba(31,157,107,0.15); color:var(--good); }
-  .score-warn{ background:rgba(224,137,46,0.15); color:var(--warn); }
-  .score-bad{ background:rgba(217,73,95,0.15); color:var(--bad); }
+  .score-good{ background:rgba(122,255,178,0.12); color:var(--good); }
+  .score-warn{ background:rgba(255,210,122,0.12); color:var(--warn); }
+  .score-bad{ background:rgba(255,134,134,0.12); color:var(--bad); }
+
+  .q-confidence{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    padding:5px 11px;
+    border-radius:999px;
+    white-space:nowrap;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+  .q-confidence .cdot{
+    width:6px; height:6px; border-radius:50%;
+    background:currentColor;
+  }
+
+  .conf-bar-wrap{
+    margin-bottom:16px;
+  }
+  .conf-bar-track{
+    width:100%;
+    height:6px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.06);
+    overflow:hidden;
+  }
+  .conf-bar-fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, var(--bad), var(--warn), var(--gold));
+    transition: width 0.6s ease;
+  }
+  .conf-bar-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--ink-3);
+    margin-top:5px;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    font-weight:600;
+  }
 
   .answer-block{
-    background:rgba(255,255,255,0.45);
-    border:1px solid rgba(255,255,255,0.7);
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.07);
     border-radius:14px;
     padding:14px 16px;
     margin-bottom:16px;
     font-size:14.5px;
     line-height:1.6;
-    color:var(--ink-1);
+    color:var(--ink-2);
   }
   .answer-block .tag{
     display:block;
     font-size:11px;
     font-weight:700;
-    letter-spacing:0.04em;
+    letter-spacing:0.05em;
     text-transform:uppercase;
-    color:var(--ink-2);
+    color:var(--ink-3);
     margin-bottom:6px;
   }
 
@@ -324,6 +451,7 @@
   }
   @media (max-width:560px){
     .feedback-grid{ grid-template-columns:1fr; }
+    .gauge-row{ flex-direction:column; }
   }
 
   .feedback-box{
@@ -338,36 +466,37 @@
     gap:6px;
     font-size:11px;
     font-weight:700;
-    letter-spacing:0.04em;
+    letter-spacing:0.05em;
     text-transform:uppercase;
     margin-bottom:8px;
   }
   .feedback-box ul{
     margin:0;
     padding-left:18px;
+    color:var(--ink-2);
   }
   .feedback-box li{ margin-bottom:4px; }
 
-  .box-strengths{ background:rgba(31,157,107,0.1); color:var(--ink-1); }
+  .box-strengths{ background:rgba(122,255,178,0.06); }
   .box-strengths .tag{ color:var(--good); }
-  .box-improve{ background:rgba(224,137,46,0.1); color:var(--ink-1); }
+  .box-improve{ background:rgba(255,210,122,0.06); }
   .box-improve .tag{ color:var(--warn); }
 
   .better-answer{
-    background:rgba(58,109,240,0.08);
+    background:rgba(212,175,55,0.07);
     border-radius:14px;
     padding:14px 16px;
     font-size:14px;
     line-height:1.6;
-    color:var(--ink-1);
+    color:var(--ink-2);
   }
   .better-answer .tag{
     display:block;
     font-size:11px;
     font-weight:700;
-    letter-spacing:0.04em;
+    letter-spacing:0.05em;
     text-transform:uppercase;
-    color:var(--accent);
+    color:var(--gold);
     margin-bottom:6px;
   }
 
@@ -375,6 +504,14 @@
     display:flex;
     justify-content:center;
     margin-top:8px;
+  }
+
+  .page-footer{
+    text-align:center;
+    margin-top:32px;
+    font-size:12px;
+    color:var(--ink-3);
+    letter-spacing:0.02em;
   }
 </style>
 </head>
@@ -384,43 +521,89 @@
   <div class="orb orb-b"></div>
   <div class="orb orb-c"></div>
 
+  {% set score_pct = (avg_score / 10 * 100) if avg_score is defined else 0 %}
+  {% set conf_pct = avg_confidence | default(0) %}
+  {% set conf_level = 'high' if conf_pct >= 70 else ('moderate' if conf_pct >= 40 else 'low') %}
+  {% set conf_label = 'High Confidence' if conf_pct >= 70 else ('Moderate Confidence' if conf_pct >= 40 else 'Low Confidence') %}
+
   <div class="wrap">
 
+    <div class="brand-header">
+      <img src="{{ url_for('static', filename='images/ai-logo.jpeg.avif') }}" class="brand-mark" alt="Aureye-AI">
+      <div class="brand-copy">
+        <h1>Aureye<span>-AI</span></h1>
+        <p>Interview Report</p>
+      </div>
+    </div>
+
     <div class="summary-card">
-      <h1>Interview Report</h1>
+      <p class="eyebrow">Performance Summary</p>
 
       <div class="role-pill">
         <span class="dot"></span>
         {{ role }}
       </div>
 
-      <div class="score-row">
-        <div class="score-ring">
-          <svg viewBox="0 0 100 100">
-            <defs>
-              <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#3a6df0" />
-                <stop offset="100%" stop-color="#7b5cf0" />
-              </linearGradient>
-            </defs>
-            <circle class="track" cx="50" cy="50" r="40"></circle>
-            <circle
-              class="fill"
-              cx="50" cy="50" r="40"
-              stroke-dasharray="251.2"
-              stroke-dashoffset="{{ 251.2 - (251.2 * (avg_score / 10)) }}"
-            ></circle>
-          </svg>
-          <div class="num">{{ avg_score }}</div>
+      <div class="gauge-row">
+        <!-- Score gauge -->
+        <div class="gauge-block">
+          <div class="score-ring">
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#d4af37" />
+                  <stop offset="100%" stop-color="#f0d074" />
+                </linearGradient>
+              </defs>
+              <circle class="track" cx="50" cy="50" r="40"></circle>
+              <circle
+                class="fill"
+                cx="50" cy="50" r="40"
+                stroke="url(#scoreGradient)"
+                stroke-dasharray="251.2"
+                stroke-dashoffset="{{ 251.2 - (251.2 * (avg_score / 10)) }}"
+              ></circle>
+            </svg>
+            <div class="num">{{ avg_score }}</div>
+          </div>
+          <div class="gauge-meta">
+            <div class="label">Average Score</div>
+            <div class="value"><strong>{{ avg_score }}</strong> / 10 across {{ results|length }} question{{ "s" if results|length != 1 else "" }}</div>
+          </div>
         </div>
-        <div class="score-meta">
-          <div class="label">Average Score</div>
-          <div class="value">{{ avg_score }} / 10 across {{ results|length }} question{{ "s" if results|length != 1 else "" }}</div>
+
+        <!-- Confidence gauge -->
+        <div class="gauge-block">
+          <div class="score-ring">
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="confGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ff8686" />
+                  <stop offset="55%" stop-color="#ffd27a" />
+                  <stop offset="100%" stop-color="#d4af37" />
+                </linearGradient>
+              </defs>
+              <circle class="track" cx="50" cy="50" r="40"></circle>
+              <circle
+                class="fill"
+                cx="50" cy="50" r="40"
+                stroke="url(#confGradient)"
+                stroke-dasharray="251.2"
+                stroke-dashoffset="{{ 251.2 - (251.2 * (conf_pct / 100)) }}"
+              ></circle>
+            </svg>
+            <div class="num">{{ conf_pct }}</div>
+          </div>
+          <div class="gauge-meta">
+            <div class="label">Average Confidence</div>
+            <div class="value"><strong>{{ conf_pct }}%</strong> — {{ conf_label }}</div>
+          </div>
         </div>
       </div>
 
       {% if categories %}
       <div class="category-breakdown">
+        <p class="breakdown-title">Category Breakdown</p>
         {% for c in categories %}
         <div class="category-row">
           <div class="category-label">{{ c.name }}</div>
@@ -433,12 +616,21 @@
       </div>
       {% endif %}
 
-      <div class="performance-badge {{ 'perf-excellent' if avg_score >= 8 else ('perf-good' if avg_score >= 6 else ('perf-fair' if avg_score >= 4 else 'perf-poor')) }}">
-        {%- if avg_score >= 8 %}🏆 Excellent Performance
-        {%- elif avg_score >= 6 %}👍 Good Performance
-        {%- elif avg_score >= 4 %}📈 Needs Improvement
-        {%- else %}⚠️ Requires Significant Improvement
-        {%- endif %}
+      <div class="badge-row">
+        <div class="performance-badge {{ 'perf-excellent' if avg_score >= 8 else ('perf-good' if avg_score >= 6 else ('perf-fair' if avg_score >= 4 else 'perf-poor')) }}">
+          {%- if avg_score >= 8 %}🏆 Excellent Performance
+          {%- elif avg_score >= 6 %}👍 Good Performance
+          {%- elif avg_score >= 4 %}📈 Needs Improvement
+          {%- else %}⚠️ Requires Significant Improvement
+          {%- endif %}
+        </div>
+
+        <div class="confidence-badge conf-{{ conf_level }}">
+          {%- if conf_level == 'high' %}✨ Delivered with High Confidence
+          {%- elif conf_level == 'moderate' %}🙂 Moderate Confidence Shown
+          {%- else %}😟 Confidence Could Improve
+          {%- endif %}
+        </div>
       </div>
 
       <div class="header-actions">
@@ -448,16 +640,37 @@
     </div>
 
     {% for r in results %}
+    {% set rc = r.confidence | default(none) %}
+    {% set rc_level = 'high' if rc is not none and rc >= 70 else ('moderate' if rc is not none and rc >= 40 else 'low') %}
     <div class="q-card">
       <div class="q-head">
         <div>
           <div class="q-number">Question {{ loop.index }}</div>
           <p class="q-text">{{ r.question }}</p>
         </div>
-        <div class="q-score {{ 'score-good' if r.score >= 7 else ('score-warn' if r.score >= 4 else 'score-bad') }}">
-          {{ r.score }}/10
+        <div class="q-badges">
+          <div class="q-score {{ 'score-good' if r.score >= 7 else ('score-warn' if r.score >= 4 else 'score-bad') }}">
+            {{ r.score }}/10
+          </div>
+          {% if rc is not none %}
+          <div class="q-confidence conf-{{ rc_level }}">
+            <span class="cdot"></span>{{ rc }}% confidence
+          </div>
+          {% endif %}
         </div>
       </div>
+
+      {% if rc is not none %}
+      <div class="conf-bar-wrap">
+        <div class="conf-bar-track">
+          <div class="conf-bar-fill" style="width: {{ rc }}%;"></div>
+        </div>
+        <div class="conf-bar-label">
+          <span>Confidence while answering</span>
+          <span>{{ rc }}%</span>
+        </div>
+      </div>
+      {% endif %}
 
       <div class="answer-block">
         <span class="tag">Your Answer</span>
@@ -501,6 +714,8 @@
     <div class="footer-actions">
       <a href="/restart" class="btn btn-ghost">Start Again</a>
     </div>
+
+    
 
   </div>
 
